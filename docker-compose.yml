@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  frontend:
+    image: skygateacrwest.azurecr.io/skygate-frontend:latest
+    ports:
+      - "80:80"
+    environment:
+      - REACT_APP_API_URL=https://www.skygate.live
+  backend:
+    image: skygateacrwest.azurecr.io/skygate-backend:latest
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - PG_DATABASE=skygate
+      - PG_USER=yakir
+      - PG_HOST=skygate-pg.postgres.database.azure.com

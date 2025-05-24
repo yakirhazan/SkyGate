@@ -1,0 +1,13 @@
+[Unit]
+Description=Gunicorn instance for Skygate
+After=network.target
+
+[Service]
+User=azureuser
+Group=azureuser
+WorkingDirectory=/home/azureuser/skygate/backend
+Environment="PATH=/home/azureuser/skygate/backend/venv/bin"
+ExecStart=/home/azureuser/skygate/backend/venv/bin/gunicorn --bind 0.0.0.0:5000 --workers 4 --timeout 120 app:app
+
+[Install]
+WantedBy=multi-user.target

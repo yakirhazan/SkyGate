@@ -1,0 +1,9 @@
+flask==3.1.1
+gunicorn==22.0.0
+requests==2.32.3
+psycopg2-binary==2.9.10
+azure-storage-blob==12.25.1
+python-dotenv==1.1.0
+flask-cors==5.0.0
+azure-identity==1.18.0
+azure-keyvault-secrets==4.8.0

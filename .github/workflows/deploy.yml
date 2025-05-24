@@ -1,0 +1,35 @@
+name: Deploy to Azure
+on:
+  push:
+    branches: [main]
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Build and push backend
+        run: |
+          cd backend
+          docker build -t skygateacrwest.azurecr.io/skygate-backend:latest .
+          az acr login --name skygateacrwest
+          docker push skygateacrwest.azurecr.io/skygate-backend:latest
+      - name: Build and push frontend
+        run: |
+          cd frontend
+          docker build -t skygateacrwest.azurecr.io/skygate-frontend:latest .
+          az acr login --name skygateacrwest
+          docker push skygateacrwest.azurecr.io/skygate-frontend:latest
+      - name: Deploy to App Service
+        run: |
+          az webapp config container set \
+            --resource-group SkygateProdWest \
+            --name skygate-prod \
+            --container-registry-url https://skygateacrwest.azurecr.io \
+            --container-registry-user skygateacrwest \
+            --container-registry-password ${{ secrets.ACR_PASSWORD }} \
+            --multicontainer-config-type compose \
+            --multicontainer-config-file docker-compose.yml
